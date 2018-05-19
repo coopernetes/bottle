@@ -5,10 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,17 +18,18 @@ public class BottleApplication {
 
 	@RestController
 	@RequiredArgsConstructor
+    @RequestMapping("/message")
 	public class DefaultController {
 
 		private final DisplayService displayService;
 
-		@GetMapping("/")
+		@GetMapping()
 		public ResponseEntity index() {
 			// average reading speed = 200 wpm = 3(ish) words per second
 		    return ResponseEntity.ok(displayService.randomMessage());
 		}
 
-		@PostMapping(value = "/", consumes = MediaType.TEXT_PLAIN_VALUE)
+		@PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
         public ResponseEntity addMessage(HttpServletRequest request, @RequestBody String message) {
 		    displayService.saveMessage(message, request.getRemoteAddr());
 		    return ResponseEntity.accepted().build();
