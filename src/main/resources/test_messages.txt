@@ -3,3 +3,34 @@ I am so blue I'm greener than purple.
 I stepped on a Corn Flake, now I'm a Cereal Killer
 On a scale from one to ten what is your favourite colour of the alphabet.
 Look, a distraction!
+A restored arrival roots for an idiot after the acute rocket.
+An electorate admires the transient stroke.
+Past the chaotic rabbit paces an unsafe outcome.
+The prototype twists beneath the abstract!
+I'm a lumberjack and I'm ok, I drink all night and I toke all day
+Natural selection is anything but random.
+What's my age again?
+Life is like Stepping onto a boat which is about to sail out to sea and sink
+Never mistake a clear view for a short distance
+Do not go gentle into that long, dark night but rage, rage against the dying of the light.
+The first 90 percent of the code accounts for the first 90 percent of the development time…The remaining 10 percent of the code accounts for the other 90 percent of the development time.
+Most of you are familiar with the virtues of a programmer. There are three, of course: laziness, impatience, and hubris.
+Measuring programming progress by lines of code is like measuring aircraft building progress by weight.
+Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.
+Once a new technology starts rolling, if you’re not part of the steamroller, you’re part of the road.
+In theory, there is no difference between theory and practice. But, in practice, there is.
+The hardest part of design … is keeping features out.
+Before software can be reusable it first has to be usable.
+If debugging is the process of removing bugs, then programming must be the process of putting them in.
+Software and cathedrals are much the same – first we build them, then we pray.
+The goal of Computer Science is to build something that will last at least until we’ve finished building it.
+The software isn’t finished until the last user is dead.
+Better train people and risk they leave – than do nothing and risk they stay.
+Programming is 10% science, 20% ingenuity, and 70% getting the ingenuity to work with the science.
+All programmers are playwrights and all computers are lousy actors.
+Bad code isn’t bad, its just misunderstood.
+It is easier to measure something than to understand what you have measured.
+The sooner you get behind in your work, the more time you have to catch up.
+When a programming language is created that allows programmers to program in simple English, it will be discovered that programmers cannot speak English.
+Benchmarks don’t lie, but liars do benchmarks.
+Why do we never have time to do it right, but always have time to do it over?
