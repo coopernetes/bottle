@@ -16,6 +16,7 @@ public class IndexUI extends UI {
     private final MessageService messageService;
     private TextArea messagesTextArea = new TextArea("What others are saying...");
     private Panel mainPanel = new Panel("Messages in a bottle");
+    private Button send = new Button("Send a message", VaadinIcons.PENCIL);
 
     @Override
     protected void init(VaadinRequest request) {
@@ -43,11 +44,12 @@ public class IndexUI extends UI {
         TextField messageField = new TextField();
         messageField.setWidth("75%");
         messageField.setPlaceholder("Enter a message...");
-        Button send = new Button("Send", VaadinIcons.BOAT);
+
         send.addClickListener(e -> {
             if (!messageField.isEmpty()) {
                 messageService.saveMessage(messageField.getValue(), request.getRemoteAddr());
-                e.getButton().setIcon(VaadinIcons.CHECK, "Sent");
+                send.setIcon(VaadinIcons.CHECK);
+                send.setCaption("Sent!");
                 messageField.clear();
             }
         });
