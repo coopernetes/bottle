@@ -41,7 +41,7 @@ public class RedisConfig {
     }
 
     @Component
-    @Profile("test")
+    @Profile("local")
     public class EmbeddedRedisServer {
 
         private final RedisServer redisServer;

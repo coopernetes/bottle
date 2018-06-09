@@ -1,3 +1,6 @@
+spring:
+  application:
+    name: bottle
 bottle:
   embed:
     enabled: false
