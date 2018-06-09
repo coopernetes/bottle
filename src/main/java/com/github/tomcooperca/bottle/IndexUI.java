@@ -48,6 +48,7 @@ public class IndexUI extends UI {
             if (!messageField.isEmpty()) {
                 messageService.saveMessage(messageField.getValue(), request.getRemoteAddr());
                 e.getButton().setIcon(VaadinIcons.CHECK, "Sent");
+                messageField.clear();
             }
         });
         formHorizontal.addComponents(messageField, send);
