@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -45,7 +43,10 @@ public class MessageService {
     }
 
     public void saveMessage(String message, String originator) {
-        newMessage = messageRepository.save(new Message(new Random().nextLong(), message, originator));
+        if (StreamSupport.stream(messageRepository.findAll().spliterator(), false)
+                .noneMatch(m -> m.getContent().equals(message))) {
+            newMessage = messageRepository.save(new Message(UUID.randomUUID(), message, originator, Locale.getDefault()));
+        }
     }
 
     public Message randomMessageEntity() {
