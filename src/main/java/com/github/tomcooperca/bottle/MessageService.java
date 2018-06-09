@@ -13,11 +13,11 @@ import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
-class DisplayService {
+public class MessageService {
 
     private final MessageRepository messageRepository;
 
-    String randomMessage() {
+    public String randomMessage() {
         List<String> allMessages = StreamSupport.stream(messageRepository.findAll().spliterator(), false)
                 .map(Message::getContent)
                 .collect(Collectors.toList());
@@ -25,7 +25,7 @@ class DisplayService {
         return allMessages.get(new Random().nextInt(allMessages.size()));
     }
 
-    void saveMessage(String message, String originator) {
+    public void saveMessage(String message, String originator) {
         messageRepository.save(new Message(new Random().nextLong(), message, originator));
     }
 }
