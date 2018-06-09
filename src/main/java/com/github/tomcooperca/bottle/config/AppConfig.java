@@ -17,4 +17,9 @@ public class AppConfig {
     public void expireNewMessage() {
         messageService.exipireNewMessage();
     }
+
+    @Scheduled(cron = "0 0 0 * * SUN")
+    public void flushMessages() {
+        messageService.deleteAllMessages();
+    }
 }

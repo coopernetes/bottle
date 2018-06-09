@@ -65,4 +65,8 @@ public class MessageService {
         Collections.shuffle(messages);
         return messages;
     }
+
+    public void deleteAllMessages() {
+        messageRepository.deleteAll();
+    }
 }
