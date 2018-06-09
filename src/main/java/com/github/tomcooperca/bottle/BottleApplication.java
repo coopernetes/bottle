@@ -1,6 +1,7 @@
 package com.github.tomcooperca.bottle;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,12 +10,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class BottleApplication {
@@ -23,7 +26,7 @@ public class BottleApplication {
 		SpringApplication.run(BottleApplication.class, args);
 	}
 
-	@Profile("test")
+	@Profile("local")
 	@Component
 	@RequiredArgsConstructor
 	public static class SaveTestMessages implements CommandLineRunner {
@@ -37,6 +40,27 @@ public class BottleApplication {
 			Path path = Paths.get(testMessages);
 
 			Files.lines(path).forEach(s -> messageService.saveMessage(s, "localhost"));
+		}
+	}
+
+	@Profile("test")
+	@Component
+	@RequiredArgsConstructor
+	public static class SaveTestMessagesFromUrl implements CommandLineRunner {
+
+		@Value("${bottle.test.url}")
+		String url;
+
+		private final MessageService messageService;
+
+		@Override
+		public void run(String... args) throws Exception {
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> responseEntity = restTemplate.getForEntity(URI.create(url), String.class);
+			if (responseEntity.getStatusCode().is2xxSuccessful()) {
+				Arrays.asList(responseEntity.getBody().split("\\n"))
+						.forEach(s -> messageService.saveMessage(s, "localhost"));
+			}
 		}
 	}
 
