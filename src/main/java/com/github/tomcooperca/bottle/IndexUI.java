@@ -32,6 +32,8 @@ public class IndexUI extends UI {
                 if (needToRefresh()) {
                     displayMessage(request);
                 }
+                send.setIcon(VaadinIcons.PENCIL);
+                send.setCaption("Send a message");
         });
         // Parent layout
         VerticalLayout mainLayout = new VerticalLayout();
