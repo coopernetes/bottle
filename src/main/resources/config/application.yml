@@ -1,3 +1,7 @@
 bottle:
   embed:
     enabled: false
+management:
+  info:
+    git:
+      mode: full
