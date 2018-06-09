@@ -1,8 +1,8 @@
 package com.github.tomcooperca.bottle.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,7 +31,7 @@ public class RedisConfig {
     }
 
     @Component
-    @ConditionalOnProperty(prefix = "bottle.embed", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @Profile("local")
     public class EmbeddedRedisServer {
 
         private final RedisServer redisServer;
