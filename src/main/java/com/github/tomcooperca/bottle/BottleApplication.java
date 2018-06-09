@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @SpringBootApplication
@@ -30,8 +32,11 @@ public class BottleApplication {
 
 		@Override
 		public void run(String... args) throws Exception {
-			Files.lines(Paths.get(ClassLoader.getSystemResource("test_messages.txt").toURI()))
-					.forEach(s -> messageService.saveMessage(s, "localhost"));
+			URI testMessages = ClassLoader.getSystemResource("test_messages.txt").toURI();
+
+			Path path = Paths.get(testMessages);
+
+			Files.lines(path).forEach(s -> messageService.saveMessage(s, "localhost"));
 		}
 	}
 
