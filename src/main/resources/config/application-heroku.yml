@@ -1,5 +1,0 @@
-spring:
-  data:
-    redis:
-      host: ec2-52-86-48-220.compute-1.amazonaws.com
-      port: 12019
