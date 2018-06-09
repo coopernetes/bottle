@@ -1,6 +1,8 @@
 package com.github.tomcooperca.bottle;
 
 import com.github.tomcooperca.bottle.repository.Message;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -17,16 +19,18 @@ public class IndexUI extends UI {
     private TextArea messagesTextArea = new TextArea("What others are saying...");
     private Panel mainPanel = new Panel("Messages in a bottle");
     private Button send = new Button("Send a message", VaadinIcons.PENCIL);
+    private TextField messageField = new TextField();
 
     @Override
     protected void init(VaadinRequest request) {
         messagesTextArea.setReadOnly(true);
+        messagesTextArea.setWordWrap(true);
         messagesTextArea.setSizeFull();
 
-        setPollInterval(3000);
+        setPollInterval(5000);
         addPollListener(e -> {
                 if (needToRefresh()) {
-                    repaintMessages(request);
+                    displayMessage(request);
                 }
         });
         // Parent layout
@@ -41,18 +45,16 @@ public class IndexUI extends UI {
         FormLayout formLayout = new FormLayout();
         HorizontalLayout formHorizontal = new HorizontalLayout();
         formHorizontal.setSizeFull();
-        TextField messageField = new TextField();
         messageField.setWidth("75%");
         messageField.setPlaceholder("Enter a message...");
-
-        send.addClickListener(e -> {
-            if (!messageField.isEmpty()) {
-                messageService.saveMessage(messageField.getValue(), request.getRemoteAddr());
-                send.setIcon(VaadinIcons.CHECK);
-                send.setCaption("Sent!");
-                messageField.clear();
+        messageField.addShortcutListener(new ShortcutListener("Enter key shortcut", ShortcutAction.KeyCode.ENTER, null) {
+            @Override
+            public void handleAction(Object sender, Object target) {
+                saveMessage(request);
             }
         });
+
+        send.addClickListener(e -> saveMessage(request));
         formHorizontal.addComponents(messageField, send);
         formLayout.addComponent(formHorizontal);
 
@@ -63,7 +65,16 @@ public class IndexUI extends UI {
 
     }
 
-    public void repaintMessages(VaadinRequest request) {
+    private void saveMessage(VaadinRequest request) {
+        if (!messageField.isEmpty()) {
+            messageService.saveMessage(messageField.getValue(), request.getRemoteAddr());
+            send.setIcon(VaadinIcons.CHECK);
+            send.setCaption("Sent!");
+            messageField.clear();
+        }
+    }
+
+    private void displayMessage(VaadinRequest request) {
         int retry = 0;
         Message message = messageService.randomMessageEntity();
         while (message.getOriginator().equals(request.getRemoteAddr()) &&
@@ -78,7 +89,7 @@ public class IndexUI extends UI {
         messagesTextArea.setValue(message.getContent());
     }
 
-    boolean needToRefresh() {
+    private boolean needToRefresh() {
         return messagesTextArea.getValue().isEmpty() ||
                 (messageService.getNewMessage() != null &&
                 (!messageService.getNewMessage().getContent().equals(messagesTextArea.getValue())));
