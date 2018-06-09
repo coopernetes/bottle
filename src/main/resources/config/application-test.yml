@@ -1,6 +1,9 @@
 bottle:
   embed:
     enabled: true
+spring:
+  redis:
+    password:
 logging:
   level:
     com.github.tomcooperca.bottle: DEBUG

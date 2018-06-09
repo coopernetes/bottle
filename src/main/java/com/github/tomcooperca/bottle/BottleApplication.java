@@ -21,7 +21,7 @@ public class BottleApplication {
 		SpringApplication.run(BottleApplication.class, args);
 	}
 
-	@Profile("local")
+	@Profile("test")
 	@Component
 	@RequiredArgsConstructor
 	public static class SaveTestMessages implements CommandLineRunner {
