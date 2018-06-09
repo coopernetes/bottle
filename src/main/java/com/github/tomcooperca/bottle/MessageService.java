@@ -45,7 +45,7 @@ public class MessageService {
     public void saveMessage(String message, String originator) {
         if (StreamSupport.stream(messageRepository.findAll().spliterator(), false)
                 .noneMatch(m -> m.getContent().equals(message))) {
-            newMessage = messageRepository.save(new Message(UUID.randomUUID(), message, originator, Locale.getDefault()));
+            newMessage = messageRepository.save(new Message(UUID.randomUUID().toString(), message, originator, Locale.getDefault().toString()));
         }
     }
 
