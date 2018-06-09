@@ -1,7 +1,5 @@
 package com.github.tomcooperca.bottle;
 
-import com.github.tomcooperca.bottle.repository.Message;
-import com.github.tomcooperca.bottle.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Random;
 
 @SpringBootApplication
 public class BottleApplication {
@@ -29,12 +26,12 @@ public class BottleApplication {
 	@RequiredArgsConstructor
 	public static class SaveTestMessages implements CommandLineRunner {
 
-		private final MessageRepository messageRepository;
+		private final MessageService messageService;
 
 		@Override
 		public void run(String... args) throws Exception {
 			Files.lines(Paths.get(ClassLoader.getSystemResource("test_messages.txt").toURI()))
-					.forEach(s -> messageRepository.save(new Message(new Random().nextLong(), s, "localhost")));
+					.forEach(s -> messageService.saveMessage(s, "localhost"));
 		}
 	}
 
@@ -50,6 +47,11 @@ public class BottleApplication {
 			// average reading speed = 200 wpm = 3(ish) words per second
 		    return ResponseEntity.ok(messageService.randomMessage());
 		}
+
+		@GetMapping("/all")
+        public ResponseEntity all() {
+		    return ResponseEntity.ok(messageService.allMessages());
+        }
 
 		@PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
         public ResponseEntity addMessage(HttpServletRequest request, @RequestBody String message) {
