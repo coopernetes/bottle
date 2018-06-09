@@ -82,6 +82,12 @@ public class BottleApplication {
 		    return ResponseEntity.ok(messageService.allMessages());
         }
 
+        @DeleteMapping("/all")
+		public ResponseEntity deleteAll() {
+			messageService.deleteAllMessages();
+			return ResponseEntity.noContent().build();
+		}
+
 		@PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
         public ResponseEntity addMessage(HttpServletRequest request, @RequestBody String message) {
 		    messageService.saveMessage(message, request.getRemoteAddr());
