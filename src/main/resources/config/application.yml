@@ -1,3 +1,7 @@
 bottle:
   embed:
-    enabled: true
+    enabled: false
+spring:
+  data:
+    redis:
+      host: some-redis-host

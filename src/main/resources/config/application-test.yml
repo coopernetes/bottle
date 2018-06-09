@@ -1,0 +1,6 @@
+bottle:
+  embed:
+    enabled: true
+logging:
+  level:
+    com.github.tomcooperca.bottle: DEBUG
