@@ -1,7 +1,5 @@
-package com.github.tomcooperca.bottle;
+package com.github.tomcooperca.bottle.message;
 
-import com.github.tomcooperca.bottle.repository.Message;
-import com.github.tomcooperca.bottle.repository.MessageRepository;
 import com.google.common.collect.EvictingQueue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,10 @@ public class MessageService {
     private Set<String> displayedMessages = new HashSet<>(3);
     private static final int AVERAGE_WPS = 3;
 
+    public Optional<Message> getMessage(String uuid) {
+        return Optional.of(messageRepository.findByUuid(uuid));
+    }
+
     public String randomMessage() {
         List<String> allMessages = allMessages().stream()
                 .map(Message::getContent)
@@ -33,11 +35,13 @@ public class MessageService {
         return allMessages.get(new Random().nextInt(allMessages.size()));
     }
 
-    public void saveMessage(String message, String originator) {
+    public Optional<Message> saveMessage(String message, String originator) {
         if (StreamSupport.stream(messageRepository.findAll().spliterator(), false)
                 .noneMatch(m -> m.getContent().equals(message))) {
-            messageRepository.save(new Message(UUID.randomUUID().toString(), message, originator, Locale.getDefault().toString()));
+            return Optional.of(messageRepository.save(new Message(UUID.randomUUID().toString(), message,
+                    originator, Locale.getDefault().toString())));
         }
+        return Optional.empty();
     }
 
     public Message randomMessageEntity() {

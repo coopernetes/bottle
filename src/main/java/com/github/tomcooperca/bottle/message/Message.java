@@ -1,4 +1,4 @@
-package com.github.tomcooperca.bottle.repository;
+package com.github.tomcooperca.bottle.message;
 
 import lombok.Value;
 import org.springframework.data.annotation.Id;

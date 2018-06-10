@@ -1,8 +1,8 @@
 package com.github.tomcooperca.bottle.service
 
-import com.github.tomcooperca.bottle.MessageService
-import com.github.tomcooperca.bottle.repository.Message
-import com.github.tomcooperca.bottle.repository.MessageRepository
+import com.github.tomcooperca.bottle.message.Message
+import com.github.tomcooperca.bottle.message.MessageRepository
+import com.github.tomcooperca.bottle.message.MessageService
 import spock.lang.Specification
 import spock.lang.Subject
 
