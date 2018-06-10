@@ -11,10 +11,6 @@ import com.vaadin.ui.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 @SpringUI
 @RequiredArgsConstructor
 @Slf4j
@@ -26,12 +22,10 @@ public class IndexUI extends UI {
     private Button send = new Button("Send a message", VaadinIcons.PENCIL);
     private TextField messageField = new TextField();
     private EvictingQueue<String> messageQueue = EvictingQueue.create(3);
-    private int pollInterval = 5000;
 
     @Override
     protected void init(VaadinRequest request) {
-        pollInterval = messageService.calculatePoll(messageQueue.peek());
-        setPollInterval(pollInterval);
+        setPollInterval(5000);
         addPollListener(e -> {
                 displayMessage(request);
                 send.setIcon(VaadinIcons.PENCIL);
@@ -44,12 +38,14 @@ public class IndexUI extends UI {
         // Inner layout
         VerticalLayout messageLayout = new VerticalLayout();
 
+        messagesTextArea.setReadOnly(true);
+        messagesTextArea.setWordWrap(true);
+        messagesTextArea.setSizeFull();
         // Form panel
         FormLayout formLayout = new FormLayout();
-        HorizontalLayout formHorizontal = new HorizontalLayout();
-        formHorizontal.setSizeFull();
         messageField.setWidth("75%");
         messageField.setPlaceholder("Enter a message...");
+        messageField.setMaxLength(180);
         messageField.addShortcutListener(new ShortcutListener("Enter key shortcut", ShortcutAction.KeyCode.ENTER, null) {
             @Override
             public void handleAction(Object sender, Object target) {
@@ -58,8 +54,7 @@ public class IndexUI extends UI {
         });
 
         send.addClickListener(e -> saveMessage(request));
-        formHorizontal.addComponents(messageField, send);
-        formLayout.addComponent(formHorizontal);
+        formLayout.addComponents(messageField, send);
 
         messageLayout.addComponents(messagesTextArea, formLayout);
         mainPanel.setContent(messageLayout);
@@ -88,9 +83,7 @@ public class IndexUI extends UI {
             if (retry > 3) return;
         }
         log.debug("Adding message {} to queue", message.getUuid());
-        messageQueue.add(message.getContent());
-        List<String> list = new ArrayList<>(messageQueue);
-        Collections.reverse(list);
-        messagesTextArea.setValue(String.join("\n\n", list));
+        if (!messageQueue.contains(message.getContent())) messageQueue.add(message.getContent());
+        messagesTextArea.setValue(String.join("\n\n", messageQueue));
     }
 }
