@@ -21,6 +21,7 @@ class MessageServiceTest extends Specification {
         messageService.saveMessage("this is a random message", "localhost")
 
         then:
+        1 * messageRepository.findAll() >> [new Message("", "", "", "")]
         1 * messageRepository.save(_)
     }
 
@@ -29,9 +30,9 @@ class MessageServiceTest extends Specification {
         def result = messageService.randomMessage()
 
         then:
-        1 * messageRepository.findAll() >> [new Message(1, "message", "localhost"),
-                                            new Message(2, "another message", "localhost"),
-                                            new Message(3, "last message", "127.0.0.1")]
+        1 * messageRepository.findAll() >> [new Message(UUID.randomUUID().toString(), "message", "localhost", Locale.default.toString()),
+                                            new Message(UUID.randomUUID().toString(), "another message", "localhost", Locale.default.toString()),
+                                            new Message(UUID.randomUUID().toString(), "last message", "127.0.0.1", Locale.default.toString())]
         result == "message" || result == "another message" || result == "last message"
     }
 }
