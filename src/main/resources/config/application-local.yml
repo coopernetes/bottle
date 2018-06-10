@@ -1,6 +1,6 @@
 bottle:
-  embed:
-    enabled: true
+  test:
+    embedded: true
 spring:
   redis:
     password:

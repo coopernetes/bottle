@@ -1,6 +1,7 @@
 package com.github.tomcooperca.bottle.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,7 @@ public class RedisConfig {
 
     @Component
     @Profile("local")
+    @ConditionalOnProperty(prefix = "bottle.test", name = "embedded")
     public class EmbeddedRedisServer {
 
         private final RedisServer redisServer;
