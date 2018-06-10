@@ -6,7 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +87,7 @@ public class BottleApplication {
 			return ResponseEntity.noContent().build();
 		}
 
-		@PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
+		@PostMapping()
         public ResponseEntity addMessage(HttpServletRequest request, @RequestBody String message) {
 		    messageService.saveMessage(message, request.getRemoteAddr());
 		    return ResponseEntity.accepted().build();
