@@ -70,7 +70,21 @@ public class MessageService {
         return message == null ? 5000 : (message.split(" ").length / AVERAGE_WPS) * 1125;
     }
 
-    public String generateMessages(String originator) {
+    public Optional<String> obtainFreshMessage(String originator) {
+        int retry = 0;
+        Message message = randomMessageEntity();
+        while (message.getOriginator().equals(originator)) {
+            log.debug("Random message {} was created by this originator, skipping", message.getUuid());
+            message = randomMessageEntity();
+            retry += 1;
+            if (retry > 5) return Optional.empty();
+        }
+        log.debug("Adding message {} to queue", message.getUuid());
+        if (!messageQueue.contains(message.getContent())) messageQueue.add(message.getContent());
+        return Optional.ofNullable(messageQueue.poll());
+    }
+
+    public String obtainFreshMessages(String originator) {
         int retry = 0;
         Message message = randomMessageEntity();
         while (message.getOriginator().equals(originator)) {
