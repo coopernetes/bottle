@@ -1,7 +1,5 @@
 package com.github.tomcooperca.bottle;
 
-import com.github.tomcooperca.bottle.repository.Message;
-import com.google.common.collect.EvictingQueue;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
@@ -18,16 +16,16 @@ public class IndexUI extends UI {
 
     private final MessageService messageService;
     private TextArea messagesTextArea = new TextArea("What others are saying...");
-    private Panel mainPanel = new Panel("Messages in a bottle");
+    private Panel mainPanel = new Panel("Latest messages");
     private Button send = new Button("Send a message", VaadinIcons.PENCIL);
     private TextField messageField = new TextField();
-    private EvictingQueue<String> messageQueue = EvictingQueue.create(3);
+
 
     @Override
     protected void init(VaadinRequest request) {
         setPollInterval(5000);
         addPollListener(e -> {
-                displayMessage(request);
+                displayMessage(request.getRemoteAddr());
                 send.setIcon(VaadinIcons.PENCIL);
                 send.setCaption("Send a message");
         });
@@ -72,18 +70,7 @@ public class IndexUI extends UI {
         }
     }
 
-    private void displayMessage(VaadinRequest request) {
-        int retry = 0;
-        Message message = messageService.randomMessageEntity();
-        while (message.getOriginator().equals(request.getRemoteAddr()) &&
-                !messagesTextArea.getValue().equals(message.getContent())) {
-            log.debug("Attempt to display a message that was posted by this user");
-            message = messageService.randomMessageEntity();
-            retry += 1;
-            if (retry > 3) return;
-        }
-        log.debug("Adding message {} to queue", message.getUuid());
-        if (!messageQueue.contains(message.getContent())) messageQueue.add(message.getContent());
-        messagesTextArea.setValue(String.join("\n\n", messageQueue));
+    private void displayMessage(String originator) {
+        messagesTextArea.setValue(messageService.generateMessages(originator));
     }
 }
