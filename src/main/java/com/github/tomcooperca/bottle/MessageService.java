@@ -20,6 +20,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     @Getter
     private volatile Message newMessage = null;
+    private static final int AVERAGE_WPS = 3;
 
     public synchronized void exipireNewMessage() {
         log.debug("Checking if new messages have been received");
@@ -69,5 +70,9 @@ public class MessageService {
 
     public void deleteAllMessages() {
         messageRepository.deleteAll();
+    }
+
+    public int calculatePoll(String message) {
+        return message == null ? 5000 : (message.split(" ").length / AVERAGE_WPS) * 1125;
     }
 }

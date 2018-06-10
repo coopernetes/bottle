@@ -1,6 +1,7 @@
 package com.github.tomcooperca.bottle;
 
 import com.github.tomcooperca.bottle.repository.Message;
+import com.google.common.collect.EvictingQueue;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
@@ -9,6 +10,10 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @SpringUI
 @RequiredArgsConstructor
@@ -20,25 +25,21 @@ public class IndexUI extends UI {
     private Panel mainPanel = new Panel("Messages in a bottle");
     private Button send = new Button("Send a message", VaadinIcons.PENCIL);
     private TextField messageField = new TextField();
+    private EvictingQueue<String> messageQueue = EvictingQueue.create(3);
+    private int pollInterval = 5000;
 
     @Override
     protected void init(VaadinRequest request) {
-        messagesTextArea.setReadOnly(true);
-        messagesTextArea.setWordWrap(true);
-        messagesTextArea.setSizeFull();
-
-        setPollInterval(5000);
+        pollInterval = messageService.calculatePoll(messageQueue.peek());
+        setPollInterval(pollInterval);
         addPollListener(e -> {
-                if (needToRefresh()) {
-                    displayMessage(request);
-                }
+                displayMessage(request);
                 send.setIcon(VaadinIcons.PENCIL);
                 send.setCaption("Send a message");
         });
         // Parent layout
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
-
         // Message panel
         // Inner layout
         VerticalLayout messageLayout = new VerticalLayout();
@@ -86,14 +87,10 @@ public class IndexUI extends UI {
             retry += 1;
             if (retry > 3) return;
         }
-
-        log.debug("Setting message text area for message {}", message.toString());
-        messagesTextArea.setValue(message.getContent());
-    }
-
-    private boolean needToRefresh() {
-        return messagesTextArea.getValue().isEmpty() ||
-                (messageService.getNewMessage() != null &&
-                (!messageService.getNewMessage().getContent().equals(messagesTextArea.getValue())));
+        log.debug("Adding message {} to queue", message.getUuid());
+        messageQueue.add(message.getContent());
+        List<String> list = new ArrayList<>(messageQueue);
+        Collections.reverse(list);
+        messagesTextArea.setValue(String.join("\n\n", list));
     }
 }
