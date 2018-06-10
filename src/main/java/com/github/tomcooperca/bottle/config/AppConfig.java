@@ -1,6 +1,6 @@
 package com.github.tomcooperca.bottle.config;
 
-import com.github.tomcooperca.bottle.MessageService;
+import com.github.tomcooperca.bottle.message.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

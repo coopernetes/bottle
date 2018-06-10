@@ -1,20 +1,19 @@
 package com.github.tomcooperca.bottle;
 
+import com.github.tomcooperca.bottle.message.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
@@ -30,20 +29,19 @@ public class BottleApplication {
 	@RequiredArgsConstructor
 	public static class SaveTestMessages implements CommandLineRunner {
 
-		private final MessageService messageService;
+		private RestTemplate restTemplate = new RestTemplate();
 
 		@Override
 		public void run(String... args) throws Exception {
 			URI testMessages = ClassLoader.getSystemResource("test_messages.txt").toURI();
-
-			Path path = Paths.get(testMessages);
-
-			Files.lines(path).forEach(s -> messageService.saveMessage(s, "localhost"));
+			Files.lines(Paths.get(testMessages))
+                    .forEach(s -> restTemplate.postForLocation("http://localhost:8080/message", s));
 		}
 	}
 
 	@Profile("test")
 	@Component
+    @ConditionalOnProperty(prefix = "bottle.test", name = "url")
 	@RequiredArgsConstructor
 	public static class SaveTestMessagesFromUrl implements CommandLineRunner {
 
@@ -61,37 +59,5 @@ public class BottleApplication {
 						.forEach(s -> messageService.saveMessage(s, "localhost"));
 			}
 		}
-	}
-
-	@RestController
-	@RequiredArgsConstructor
-    @RequestMapping("/message")
-	public class DefaultController {
-
-		private final MessageService messageService;
-
-		@GetMapping()
-		public ResponseEntity index() {
-			// average reading speed = 200 wpm = 3(ish) words per second
-		    return ResponseEntity.ok(messageService.randomMessage());
-		}
-
-		@GetMapping("/all")
-        public ResponseEntity all() {
-		    return ResponseEntity.ok(messageService.allMessages());
-        }
-
-        @DeleteMapping("/all")
-		public ResponseEntity deleteAll() {
-			messageService.deleteAllMessages();
-			return ResponseEntity.noContent().build();
-		}
-
-		@PostMapping()
-        public ResponseEntity addMessage(HttpServletRequest request, @RequestBody String message) {
-		    messageService.saveMessage(message, request.getRemoteAddr());
-		    return ResponseEntity.accepted().build();
-        }
-
 	}
 }
