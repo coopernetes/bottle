@@ -2,7 +2,6 @@ package com.github.tomcooperca.bottle;
 
 import com.github.tomcooperca.bottle.repository.Message;
 import com.github.tomcooperca.bottle.repository.MessageRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,22 +17,7 @@ import java.util.stream.StreamSupport;
 public class MessageService {
 
     private final MessageRepository messageRepository;
-    @Getter
-    private volatile Message newMessage = null;
     private static final int AVERAGE_WPS = 3;
-
-    public synchronized void exipireNewMessage() {
-        log.debug("Checking if new messages have been received");
-        if (newMessage != null) {
-            try {
-                Thread.sleep(3000);
-            }
-            catch (InterruptedException e) {
-                log.warn("3s cooldown on message received interrupted");
-            }
-            newMessage = null;
-        }
-    }
 
     public String randomMessage() {
         List<String> allMessages = allMessages().stream()
@@ -46,7 +30,7 @@ public class MessageService {
     public void saveMessage(String message, String originator) {
         if (StreamSupport.stream(messageRepository.findAll().spliterator(), false)
                 .noneMatch(m -> m.getContent().equals(message))) {
-            newMessage = messageRepository.save(new Message(UUID.randomUUID().toString(), message, originator, Locale.getDefault().toString()));
+            messageRepository.save(new Message(UUID.randomUUID().toString(), message, originator, Locale.getDefault().toString()));
         }
     }
 

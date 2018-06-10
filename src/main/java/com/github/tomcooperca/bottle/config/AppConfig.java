@@ -13,11 +13,6 @@ public class AppConfig {
 
     private final MessageService messageService;
 
-    @Scheduled(fixedRate = 5000)
-    public void expireNewMessage() {
-        messageService.exipireNewMessage();
-    }
-
     @Scheduled(cron = "0 0 0 * * SUN")
     public void flushMessages() {
         messageService.deleteAllMessages();
