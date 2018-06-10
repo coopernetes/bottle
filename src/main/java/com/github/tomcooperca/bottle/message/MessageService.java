@@ -24,7 +24,7 @@ public class MessageService {
     private static final int AVERAGE_WPS = 3;
 
     public Optional<Message> getMessage(String uuid) {
-        return Optional.of(messageRepository.findByUuid(uuid));
+        return Optional.ofNullable(messageRepository.findByUuid(uuid));
     }
 
     public String randomMessage() {

@@ -22,7 +22,7 @@ public class MessageController {
         return ResponseEntity.ok(messageService.randomMessage());
     }
 
-    @GetMapping("/message/{uuid:.+}")
+    @GetMapping("/message/{uuid:(?!all)[\\w\\-]+}")
     public ResponseEntity<String> getMessageByUuid(@PathVariable String uuid) {
         return messageService.getMessage(uuid)
                 .map(Message::getContent)

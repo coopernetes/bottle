@@ -62,10 +62,10 @@ public class IndexUI extends UI {
         messageField.addShortcutListener(new ShortcutListener("Enter key shortcut", ShortcutAction.KeyCode.ENTER, null) {
             @Override
             public void handleAction(Object sender, Object target) {
-                saveMessage(request);
+                saveMessage(request.getRemoteAddr());
             }
         });
-        send.addClickListener(e -> saveMessage(request));
+        send.addClickListener(e -> saveMessage(request.getRemoteAddr()));
         formLayout.addComponents(messageField, send);
         formLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         formLayout.setComponentAlignment(send, Alignment.MIDDLE_RIGHT);
@@ -76,9 +76,9 @@ public class IndexUI extends UI {
 
     }
 
-    private void saveMessage(VaadinRequest request) {
+    private void saveMessage(String originator) {
         if (!messageField.isEmpty()) {
-            messageService.saveMessage(messageField.getValue(), request.getRemoteAddr());
+            messageService.saveMessage(messageField.getValue(), originator);
             send.setIcon(VaadinIcons.CHECK);
             send.setCaption("Sent!");
             messageField.clear();
