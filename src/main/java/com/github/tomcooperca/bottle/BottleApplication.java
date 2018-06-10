@@ -6,7 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,7 @@ public class BottleApplication {
 	@RequiredArgsConstructor
 	public static class SaveTestMessages implements CommandLineRunner {
 
-		@LocalServerPort
+		@Value("${server.port}")
 		int port;
 
 		private RestTemplate restTemplate = new RestTemplate();
@@ -51,7 +50,7 @@ public class BottleApplication {
 		@Value("${bottle.test.url}")
 		String url;
 
-		@LocalServerPort
+		@Value("${server.port}")
 		int port;
 
 		private RestTemplate restTemplate = new RestTemplate();
