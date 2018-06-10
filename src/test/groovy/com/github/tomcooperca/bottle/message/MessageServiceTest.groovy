@@ -1,4 +1,4 @@
-package com.github.tomcooperca.bottle.service
+package com.github.tomcooperca.bottle.message
 
 import com.github.tomcooperca.bottle.message.Message
 import com.github.tomcooperca.bottle.message.MessageRepository
