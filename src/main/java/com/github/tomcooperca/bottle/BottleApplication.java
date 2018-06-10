@@ -1,6 +1,5 @@
 package com.github.tomcooperca.bottle;
 
-import com.github.tomcooperca.bottle.message.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -48,7 +47,7 @@ public class BottleApplication {
 		@Value("${bottle.test.url}")
 		String url;
 
-		private final MessageService messageService;
+		private RestTemplate restTemplate = new RestTemplate();
 
 		@Override
 		public void run(String... args) throws Exception {
@@ -56,7 +55,7 @@ public class BottleApplication {
 			ResponseEntity<String> responseEntity = restTemplate.getForEntity(URI.create(url), String.class);
 			if (responseEntity.getStatusCode().is2xxSuccessful()) {
 				Arrays.asList(responseEntity.getBody().split("\\n"))
-						.forEach(s -> messageService.saveMessage(s, "localhost"));
+						.forEach(s -> restTemplate.postForLocation("http://localhost:8080/message", s));
 			}
 		}
 	}
