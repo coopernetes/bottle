@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.index.Indexed;
 @Value
 public class Message {
     @Id
+    @Indexed
     private String uuid;
     @Indexed
     private String content;
