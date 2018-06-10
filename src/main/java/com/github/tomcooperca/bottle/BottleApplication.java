@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -28,13 +29,16 @@ public class BottleApplication {
 	@RequiredArgsConstructor
 	public static class SaveTestMessages implements CommandLineRunner {
 
+		@LocalServerPort
+		int port;
+
 		private RestTemplate restTemplate = new RestTemplate();
 
 		@Override
 		public void run(String... args) throws Exception {
 			URI testMessages = ClassLoader.getSystemResource("test_messages.txt").toURI();
 			Files.lines(Paths.get(testMessages))
-                    .forEach(s -> restTemplate.postForLocation("http://localhost:8080/message", s));
+					.forEach(s -> restTemplate.postForLocation("http://localhost:".concat(String.valueOf(port)).concat("/message"), s));
 		}
 	}
 
@@ -47,6 +51,9 @@ public class BottleApplication {
 		@Value("${bottle.test.url}")
 		String url;
 
+		@LocalServerPort
+		int port;
+
 		private RestTemplate restTemplate = new RestTemplate();
 
 		@Override
@@ -55,7 +62,7 @@ public class BottleApplication {
 			ResponseEntity<String> responseEntity = restTemplate.getForEntity(URI.create(url), String.class);
 			if (responseEntity.getStatusCode().is2xxSuccessful()) {
 				Arrays.asList(responseEntity.getBody().split("\\n"))
-						.forEach(s -> restTemplate.postForLocation("http://localhost:8080/message", s));
+						.forEach(s -> restTemplate.postForLocation("http://localhost:".concat(String.valueOf(port)).concat("/message"), s));
 			}
 		}
 	}
