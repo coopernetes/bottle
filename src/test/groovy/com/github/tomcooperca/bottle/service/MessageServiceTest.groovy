@@ -18,11 +18,13 @@ class MessageServiceTest extends Specification {
 
     def "saveMessage should write to the repository"() {
         when:
-        messageService.saveMessage("this is a random message", "localhost")
+        def result = messageService.saveMessage("this is a random message", "localhost")
 
         then:
         1 * messageRepository.findAll() >> [new Message("", "", "", "")]
-        1 * messageRepository.save(_)
+        1 * messageRepository.save(_) >> Optional.of(new Message(UUID.randomUUID().toString(),
+                "this is a random message", "localhost", Locale.default.toString()))
+        result.isPresent()
     }
 
     def "randomMessage should return a randomized message"() {
