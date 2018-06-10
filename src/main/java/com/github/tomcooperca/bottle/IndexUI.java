@@ -89,6 +89,10 @@ public class IndexUI extends UI {
         Collections.shuffle(messageAreas);
         messageService.obtainFreshMessage(originator)
                 .ifPresent(s -> {
+                    // dont update a message that's already displayed
+                    if (messageAreas.stream().anyMatch(a -> a.getValue().equals(s))) {
+                        return;
+                    }
                     // if none of the textareas are empty, modify the first one
                     if (messageAreas.stream().noneMatch(a -> a.getValue().isEmpty())) {
                         messageAreas.get(0).setValue(s);
