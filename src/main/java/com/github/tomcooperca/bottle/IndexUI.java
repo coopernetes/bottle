@@ -88,7 +88,18 @@ public class IndexUI extends UI {
     private void updateOneMessage(String originator) {
         Collections.shuffle(messageAreas);
         messageService.obtainFreshMessage(originator)
-                .ifPresent(s -> messageAreas.get(0).setValue(s));
+                .ifPresent(s -> {
+                    // if none of the textareas are empty, modify the first one
+                    if (messageAreas.stream().noneMatch(a -> a.getValue().isEmpty())) {
+                        messageAreas.get(0).setValue(s);
+                    }
+                    else {
+                        messageAreas.stream()
+                                .filter(a -> a.getValue().isEmpty())
+                                .findFirst()
+                                .ifPresent(a -> a.setValue(s));
+                    }
+                });
 
     }
 
