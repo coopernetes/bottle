@@ -15,6 +15,11 @@ class MessageServiceTest extends Specification {
         messageService = new MessageService(messageRepository)
     }
 
+    def "GetMessage"() {
+    }
+
+    def "AllMessages"() {
+    }
 
     def "saveMessage should write to the repository"() {
         when:
@@ -37,4 +42,21 @@ class MessageServiceTest extends Specification {
                                             new Message(UUID.randomUUID().toString(), "last message", "127.0.0.1", Locale.default.toString())]
         result == "message" || result == "another message" || result == "last message"
     }
+
+    def "RandomMessageEntity"() {
+    }
+
+    def "RandomizedAllMessages"() {
+    }
+
+    def "ObtainFreshMessage"() {
+    }
+
+    def "ObtainFreshMessages"() {
+    }
+
+    def "DeleteAllMessages"() {
+    }
+
+
 }
